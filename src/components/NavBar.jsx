@@ -70,7 +70,7 @@ const NavBar = () => {
           </SearchContainer>
         </Left>
         <Center>
-          <Logo>Dogra.</Logo>
+          <Logo>Dogra Inc.</Logo>
         </Center>
         <Right>
           <MenuItem>REGISTER</MenuItem>
