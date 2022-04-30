@@ -2,9 +2,14 @@ import { Add, Remove } from "@material-ui/icons";
 import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
-import NavBar from "../components/NavBar";
-import NewsLetter from "../components/NewsLetter";
+import Navbar from "../components/Navbar";
+import Newsletter from "../components/Newsletter";
 import { mobile } from "../responsive";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { publicRequest } from "../requestMethods";
+import { addProduct } from "../redux/cartRedux";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div``;
 
@@ -14,7 +19,7 @@ const Wrapper = styled.div`
   ${mobile({ padding: "10px", flexDirection: "column" })}
 `;
 
-const ImageContainer = styled.div`
+const ImgContainer = styled.div`
   flex: 1;
 `;
 
@@ -32,7 +37,7 @@ const InfoContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-weight: 500;
+  font-weight: 200;
 `;
 
 const Desc = styled.p`
@@ -40,7 +45,7 @@ const Desc = styled.p`
 `;
 
 const Price = styled.span`
-  font-weight: 200;
+  font-weight: 100;
   font-size: 40px;
 `;
 
@@ -115,53 +120,75 @@ const Button = styled.button`
 `;
 
 const Product = () => {
+  const location = useLocation();
+  const id = location.pathname.split("/")[2];
+  const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const res = await publicRequest.get("/products/find/" + id);
+        setProduct(res.data);
+      } catch {}
+    };
+    getProduct();
+  }, [id]);
+
+  const handleQuantity = (type) => {
+    if (type === "dec") {
+      quantity > 1 && setQuantity(quantity - 1);
+    } else {
+      setQuantity(quantity + 1);
+    }
+  };
+
+  const handleClick = () => {
+    dispatch(addProduct({ ...product, quantity, color, size }));
+  };
   return (
     <Container>
-      <NavBar></NavBar>
-      <Announcement></Announcement>
+      <Navbar />
+      <Announcement />
       <Wrapper>
-        <ImageContainer>
-          <Image src="https://www.prada.com/content/dam/pradanux_products/U/UCS/UCS319/1YOTF010O/UCS319_1YOT_F010O_S_182_SLF.png" />
-        </ImageContainer>
+        <ImgContainer>
+          <Image src={product.img} />
+        </ImgContainer>
         <InfoContainer>
-          <Title>Cotton Shirt</Title>
-          <Desc>
-            There are many variations of passages of Lorem Ipsum available, but
-            the majority have suffered alteration in some form, by injected
-            humour, or randomised words which don't look even slightly
-            believable.
-          </Desc>
-          <Price>$ 20</Price>
+          <Title>{product.title}</Title>
+          <Desc>{product.desc}</Desc>
+          <Price>$ {product.price}</Price>
           <FilterContainer>
             <Filter>
               <FilterTitle>Color</FilterTitle>
-              <FilterColor color="green" />
-              <FilterColor color="darkblue" />
-              <FilterColor color="yellow" />
+              {product.color?.map((c) => (
+                <FilterColor color={c} key={c} onClick={() => setColor(c)} />
+              ))}
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
-              <FilterSize>
-                <FilterSizeOption>XS</FilterSizeOption>
-                <FilterSizeOption>S</FilterSizeOption>
-                <FilterSizeOption>M</FilterSizeOption>
-                <FilterSizeOption>L</FilterSizeOption>
-                <FilterSizeOption>XL</FilterSizeOption>
+              <FilterSize onChange={(e) => setSize(e.target.value)}>
+                {product.size?.map((s) => (
+                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
+                ))}
               </FilterSize>
             </Filter>
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove />
-              <Amount>1</Amount>
-              <Add />
+              <Remove onClick={() => handleQuantity("dec")} />
+              <Amount>{quantity}</Amount>
+              <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <Button onClick={handleClick}>ADD TO CART</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>
-      <NewsLetter></NewsLetter>
-      <Footer></Footer>
+      <Newsletter />
+      <Footer />
     </Container>
   );
 };

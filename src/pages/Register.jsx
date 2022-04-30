@@ -10,24 +10,25 @@ const Container = styled.div`
     ),
     url("https://images.pexels.com/photos/6984661/pexels-photo-6984661.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
       center;
+  background-size: cover;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
 const Wrapper = styled.div`
-  padding: 20px;
   width: 40%;
+  padding: 20px;
   background-color: white;
   ${mobile({ width: "75%" })}
 `;
 
 const Title = styled.h1`
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 300;
 `;
 
-const Form = styled.div`
+const Form = styled.form`
   display: flex;
   flex-wrap: wrap;
 `;
