@@ -14,12 +14,14 @@ const Title = styled.h1`
   font-size: 70px;
   margin-bottom: 20px;
 `;
-const Description = styled.div`
-  font-weight: 300;
+
+const Desc = styled.div`
   font-size: 24px;
+  font-weight: 300;
   margin-bottom: 20px;
   ${mobile({ textAlign: "center" })}
 `;
+
 const InputContainer = styled.div`
   width: 50%;
   height: 40px;
@@ -29,25 +31,26 @@ const InputContainer = styled.div`
   border: 1px solid lightgray;
   ${mobile({ width: "80%" })}
 `;
+
 const Input = styled.input`
   border: none;
   flex: 8;
   padding-left: 20px;
 `;
 const Button = styled.button`
-  flex: 2;
+  flex: 1;
   border: none;
   background-color: teal;
   color: white;
 `;
 
-const NewsLetter = () => {
+const Newsletter = () => {
   return (
     <Container>
-      <Title>NewsLetter</Title>
-      <Description>Get Timely Updates from your favorite products.</Description>
+      <Title>Newsletter</Title>
+      <Desc>Get timely updates from your favorite products.</Desc>
       <InputContainer>
-        <Input placeholder="Your email"></Input>
+        <Input placeholder="Your email" />
         <Button>
           <Send />
         </Button>
@@ -56,4 +59,4 @@ const NewsLetter = () => {
   );
 };
 
-export default NewsLetter;
+export default Newsletter;
